@@ -54,7 +54,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   tag: 'logo',
                   child: Container(
                     child: Image.asset('images/logo.png'),
-                    height: curvedAnimation.value * 80,
+                    height: curvedAnimation.value * 60,
                   ),
                 ),
                 AnimatedTextKit(
