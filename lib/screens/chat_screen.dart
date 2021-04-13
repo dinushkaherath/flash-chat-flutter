@@ -73,6 +73,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       _firestore.collection('messages').add({
                         'sender': loggedInUser.email,
                         'text': messageText,
+                        'ts': FieldValue.serverTimestamp()
                       });
                     },
                     child: Text(
@@ -94,14 +95,14 @@ class MessageBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-        stream: _firestore.collection('messages').snapshots(),
+        stream: _firestore.collection('messages').orderBy('ts').snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return CircularProgressIndicator(
               backgroundColor: Colors.lightBlueAccent,
             );
           }
-          final messages = snapshot.data.docs;
+          final messages = snapshot.data.docs.reversed;
           final currentUser = loggedInUser.email;
           List<MessageBubble> messageBubbles = [];
           for (var message in messages) {
@@ -116,6 +117,7 @@ class MessageBuilder extends StatelessWidget {
           }
           return Expanded(
             child: ListView(
+              reverse: true,
               padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               children: messageBubbles,
             ),
